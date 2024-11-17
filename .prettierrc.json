@@ -1,0 +1,23 @@
+{
+  "printWidth": 120,
+  "tabWidth": 2,
+  "semi": true,
+  "bracketSpacing": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "importOrder": [
+    "^react(.*)",
+    "<THIRD_PARTY_MODULES>",
+    "^@apis/(.*)$",
+    "^@lib/(.*)$",
+    "^@core/(.*)$",
+    "^@pages/(.*)$",
+    "^@components/(.*)$",
+    "^@assets/(.*)$",
+    "^@styles/(.*)$",
+    "^types/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true
+}
