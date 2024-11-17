@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Navigate, Route, Routes } from 'react-router';
 import IntroPage from '@pages/Intro';
+import MicVolumePage from '@pages/micVolume';
 import NotFoundPage from '@pages/notFound';
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<IntroPage />} />
+        <Route path="/mic-volume" element={<MicVolumePage />} />
         <Route path="/not-found" element={<NotFoundPage />} />
         <Route path="/*" element={<Navigate to="/not-found" replace />} />
       </Routes>
