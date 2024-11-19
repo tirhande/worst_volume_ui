@@ -5,7 +5,12 @@ import { MicVolume } from './MicVolume';
 const MicVolumePage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
+  const [onFrameId, setOnFrameId] = useState<number | null>(null);
   // let onFrameId = null;
+
+  const [volume, setVolume] = useState<number>(0);
+
+  const [volumeBar, setVolumeBar] = useState<string[]>(Array.from({ length: 10 }, () => '#E6E6E6'));
 
   const startRecording = () => {
     navigator.mediaDevices
@@ -22,17 +27,18 @@ const MicVolumePage = () => {
 
         const onFrame = () => {
           analyser.getFloatTimeDomainData(pcmData);
-          let sum = 0.0;
-          for (const amplitude of pcmData) {
-            sum += amplitude * amplitude;
-          }
+          const sum = pcmData.reduce((acc, cur) => {
+            acc += cur * cur;
+
+            return acc;
+          }, 0.0);
           const rms = Math.sqrt(sum / pcmData.length);
           const normalizedVolume = Math.min(1, rms / 0.5);
           colorVolumeMeter(normalizedVolume * 2);
-          // onFrameId = window.requestAnimationFrame(onFrame);
+          setOnFrameId(requestAnimationFrame(onFrame));
         };
 
-        // onFrameId = window.requestAnimationFrame(onFrame);
+        setOnFrameId(requestAnimationFrame(onFrame));
       })
       .catch((error) => {
         notify.error(`마이크 권한 획득 실패, ${error}`);
@@ -42,7 +48,7 @@ const MicVolumePage = () => {
   const stopRecording = useCallback(() => {
     if (isRecording) {
       setIsRecording(false);
-      // if (onFrameId) window.cancelAnimationFrame(onFrameId);
+      if (onFrameId) cancelAnimationFrame(onFrameId);
     }
 
     if (audioStream) {
@@ -57,23 +63,15 @@ const MicVolumePage = () => {
   };
 
   const colorVolumeMeter = (vol: number) => {
-    const VOL_METER_MAX = 10;
-    // const childrens = document.querySelectorAll(".volumeBar");
+    const VOL_METER_MAX = 100;
 
-    // childrens.forEach((child) => {
-    //   child.style.backgroundColor = "#e6e6e6";
-    // });
+    const currentVol = normalizeToInteger(vol, 0, VOL_METER_MAX);
 
-    const numberOfChildToColor = normalizeToInteger(vol, 0, VOL_METER_MAX);
-    // const coloredChild = Array.from(childrens).slice(0, numberOfChildToColor);
-
-    // coloredChild.forEach((child) => {
-    //   child.style.backgroundColor = "#4F4FFB";
-    // });
+    handleChangeVolume(currentVol);
+    // setVolume(currentVol);
+    // setVolumeBar(volumeBar.map((_, idx) => (idx < numberOfChildToColor ? '#4F4FFB' : '#E6E6E6')));
   };
 
-  // document.querySelector("#start").addEventListener("click", startRecording);
-  // document.querySelector("#stop").addEventListener("click", stopRecording);
   const handleOnStartClick = () => {
     startRecording();
   };
@@ -81,7 +79,20 @@ const MicVolumePage = () => {
     stopRecording();
   };
 
-  return <MicVolume />;
+  const [throttle, setThrottle] = useState(false);
+
+  const handleChangeVolume = (value: number) => {
+    if (throttle) return;
+    if (!throttle) {
+      setThrottle(true);
+      setTimeout(async () => {
+        setVolume(value);
+        setThrottle(false);
+      }, 1000);
+    }
+  };
+
+  return <MicVolume onStartClick={handleOnStartClick} onStopClick={handleOnStopClick} volume={volume} />;
 };
 
 export default MicVolumePage;
