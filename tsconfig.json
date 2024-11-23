@@ -8,11 +8,10 @@
     "strict": true,
     "checkJs": false,
     "noImplicitAny": true,
+    "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
-      "@apis/*": ["apis/*"],
       "@lib/*": ["lib/*"],
-      "@core/*": ["core/*"],
       "@pages/*": ["pages/*"],
       "@components/*": ["components/*"],
       "@assets/*": ["assets/*"],
