@@ -4,6 +4,7 @@ import { getDistanceBetweenLocations, getRandomNumber, shuffleArray } from '@lib
 import { StyledMain } from '@styles/common';
 import countryCapitals from '@assets/country_capital_lat_long.json';
 import { notify } from '@lib/notfiy';
+import { Toaster } from 'react-hot-toast';
 
 export interface CountryCapital {
   country: string;
@@ -35,20 +36,13 @@ const LocationPage = () => {
     },
   });
 
-  const [toastId, setToastId] = useState<string>('');
-
   useEffect(() => {
     const notifyId = notify.success(`${currentLocation.country} -> ${targetLocation.country}`);
-    setToastId(notifyId);
 
     return () => {
-      notify.remove(toastId);
+      notify.remove(notifyId);
     };
   }, []);
-
-  useEffect(() => {
-    toastId && notify.custom();
-  }, [toastId]);
 
   return (
     <StyledMain>
@@ -64,6 +58,7 @@ const LocationPage = () => {
         distance={Math.round(distance)}
         volume={Math.round((distance / HALF_CIRCUMFERENCE) * 100)}
       />
+      <Toaster />
     </StyledMain>
   );
 };
