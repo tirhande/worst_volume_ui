@@ -52,7 +52,7 @@ const StyledBarWrapper = styled.div`
 `;
 const StyledBar = styled.div<{ fillWidth: number }>`
   position: absolute;
-  background: #0095ff;
+  background: #2234ff;
   width: ${({ fillWidth }) => `${fillWidth}%;`};
   height: 100%;
   z-index: 1;
