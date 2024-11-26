@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.tsx",
   "scripts": {
+    "build": "webpack --config webpack.config.js",
     "format": "prettier --check --ignore-path ../.gitignore .",
     "format:fix": "prettier --write --ignore-path ../.gitignore .",
     "lint": "eslint --cache .",
